@@ -1,9 +1,11 @@
 #include "DoubleList.hpp"
+#include "OneList.hpp"
 #include <cctype>
 #include <iostream>
-#define LINKEDLIST OneList<char>
 
-void insert_chars(LINKEDLIST &list) {
+template <typename LINKEDLIST> void print_list(LINKEDLIST &list);
+
+template <typename LINKEDLIST> void insert_chars(LINKEDLIST &list) {
 
   auto it2 = list.begin();
   auto it3 = it2;
@@ -44,6 +46,12 @@ void insert_chars(LINKEDLIST &list) {
 
     it1 = it2;
     have_it1 = true;
+
+    print_list(list);
+    for (int j = 0; j < i; j++)
+      std::cout.put(' ');
+    std::cout.put('^');
+	std::cout.put('\n');
   }
 
   if (mpos1 == -1)
@@ -53,18 +61,95 @@ void insert_chars(LINKEDLIST &list) {
   list.insert(mpos1, '$');
 }
 
-int main() {
+template <typename LINKEDLIST> void print_list(LINKEDLIST &list) {
+  for (auto i = list.begin(); i != list.end(); ++i) {    
+    std::cout.put(*i);
+  }
+  std::cout.put('\n');
+}  
+
+template <typename LINKEDLIST> void read(LINKEDLIST &list) {
   char c;
-  LINKEDLIST list;
+  std::cin.get(c);
   while (std::cin.get(c)) {
     if (c == '\n')
       break;
     list.push_back(c);
   }
-  insert_chars(list);
+}
 
-  for (auto i = list.begin(); i != list.end(); ++i) {
-    std::cout.put(*i);
+template <typename LINKEDLIST> void menu() {
+  char c;
+  int punkt, index;
+  LINKEDLIST list;
+  while (true) {
+    std::cin >> punkt;
+    switch (punkt) {
+    case 1: // Ввод массива
+      read<LINKEDLIST>(list);
+	  break;
+    case 2: // Вывод массива
+      print_list<LINKEDLIST>(list);
+      break;
+    case 3: // Расчет массива
+      insert_chars<LINKEDLIST>(list);
+	  break;
+    case 4:
+      std::cout << list.size() << std::endl;      
+      break;
+    case 5:
+      std::cout << list.empty() << std::endl;      
+      break;
+    case 6:
+      list.pop_back();
+      break;
+    case 7:
+      list.pop_front();
+      break;
+    case 8:
+      std::cout << list.front() << std::endl;      
+      break;
+    case 9:
+      std::cout << list.back() << std::endl;      
+      break;
+    case 10:
+      std::cin.get(c);      
+      std::cin >> c;
+      list.push_back(c);
+      break;
+    case 11:
+      std::cin.get(c);      
+      std::cin >> c;
+      list.push_front(c);
+      break;
+    case 12:
+      std::cin >> index;      
+	  std::cin.get(c);
+	  std::cin >> c;
+      list.insert(index, c);
+      break;
+    case 13:
+      std::cin.get(c);      
+      std::cin >> c;
+      list.remove(c);
+      break;
+    case 0:
+      return;      
+	}      
+  }    
+}
+
+int main() {
+  int num;
+
+  while (1) {
+    std::cin >> num;
+    switch (num) {
+    case 1:
+      menu<OneList<char>>();
+      break;
+    case 2:
+      menu<DoubleList<char>>();
+    }
   }
-  std::cout.put('\n');
 }
